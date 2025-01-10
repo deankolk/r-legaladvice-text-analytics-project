@@ -21,4 +21,8 @@ redundant variations of words that have the same topic)
 
 determined the number of clusters by what makes most sense in context of the scope of the problem
 
+used PCA to reduce dimensionality for the purpose of visualizing clusters 
+
+ranked the final clusters using the average TFIDF score 
+
 
