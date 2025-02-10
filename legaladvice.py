@@ -156,14 +156,18 @@ assigned_words = set()
 # Assuming kmeans.labels_ contains your cluster labels
 num_clusters = len(np.unique(kmeans.labels_))  # Get number of clusters
 
-# Create a dictionary for cluster shapes
-markers = ['o', 's', 'D', '^', 'v', 'p', '*', 'H']  # Add more shapes if you have more clusters
-colors = plt.cm.viridis(np.linspace(0, 1, num_clusters))  # Generate colors for clusters
+# Cluster shape markers
+markers = ['o', 's', 'D', '^', 'v', 'p', '*', 'H']
+colors = plt.cm.viridis(np.linspace(0, 1, num_clusters)) 
+
+# Reduce dimensionality using PCA to visualize in 2D
 pca = PCA(n_components=2)
-pca_result = pca.fit_transform(tfidf_matrix)  # Use .toarray() if using a sparse matrix
-# Plot the clusters with different markers
+pca_result = pca.fit_transform(tfidf_matrix.toarray())
+
+# Plot the clusters
 plt.figure(figsize=(10, 7))
 
+# Customize clusters with different markers and colors
 for cluster in range(num_clusters):
     plt.scatter(pca_result[kmeans.labels_ == cluster, 0],
                 pca_result[kmeans.labels_ == cluster, 1],
@@ -171,18 +175,20 @@ for cluster in range(num_clusters):
                 marker=markers[cluster % len(markers)],
                 color=colors[cluster])
 
-plt.title("K-Means Clustering of Documents")
+# Update title and labels
+plt.title("K-Means Clustering of r/legaladvice")
 plt.xlabel("PCA Component 1")
 plt.ylabel("PCA Component 2")
-plt.legend(title='Clusters')
-plt.show()
-# Reduce dimensionality using PCA to visualize in 2D
-pca = PCA(n_components=2)
-pca_result = pca.fit_transform(tfidf_matrix.toarray())
 
-# Plot the clusters
-plt.figure(figsize=(10, 7))
-plt.scatter(pca_result[:, 0], pca_result[:, 1], c=kmeans.labels_, cmap='viridis')
-plt.title("K-Means Clustering of Documents")
+# Customizing the legend for clusters
+cluster_labels = {0: 'Car Related', 1: 'Rental and Leasing', 2: 'Work and Finances'}
+
+# Update legend with custom labels
+handles, _ = plt.gca().get_legend_handles_labels()
+plt.legend(handles=[handle for i, handle in enumerate(handles) if i in cluster_labels],
+           labels=[cluster_labels[i] for i in cluster_labels],
+           title='Clusters')
+
 plt.show()
+
 
